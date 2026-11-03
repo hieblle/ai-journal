@@ -1,6 +1,8 @@
 # AI Journal
 
-Ein persönliches Journal in Markdown mit einem KI-Gegenüber, das regelmäßig ehrlich spiegelt, was in den Einträgen steht. Läuft als lokaler Webserver auf dem Mac, Oberfläche im Browser. Das Design und alle Entscheidungen stehen in [DESIGN.md](DESIGN.md).
+Ein persönliches Journal in Markdown mit einem KI-Gegenüber, das regelmäßig ehrlich spiegelt, was in den Einträgen steht. Läuft als lokaler Webserver auf dem Mac, Oberfläche im Browser.
+
+Dokumentation: [DESIGN.md](DESIGN.md) (Soll), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (Ist), [docs/DECISIONS.md](docs/DECISIONS.md), [docs/TASKS.md](docs/TASKS.md), [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Schnellstart (Mac)
 

@@ -125,20 +125,5 @@ CodeMirror für den Editor. Start per `./start.sh`.
 
 ## Backlog
 
-Offene Aufgaben, die nach dem Prototyp anstehen. Reihenfolge nach Priorität.
-
-1. **Token sicher ablegen (vor Dauerbetrieb).** Das langlebige CLI-Token aus
-   `claude setup-token` liegt aktuell im Klartext in `~/.ai-journal/config.json`.
-   Geplant: Ablage in der macOS-Keychain (`security add-generic-password` /
-   `find-generic-password`), nur zur Laufzeit auslesen, plus optionales Feld
-   "Befehl, der das Token liefert" für 1Password/Bitwarden/eigene Skripte.
-   Gleiches Muster für den Claude-API-Key. Aufwand ca. eine Stunde.
-2. **Klären, warum der Print-Modus den Keychain-Login nicht nutzt.** Interaktiv
-   läuft `claude`, `claude -p` meldet "OAuth session expired". Diagnose:
-   `type claude`, `claude --version`, `claude auth status --text`,
-   `claude -p "Sag OK."`. Vermutung: zweite Installation oder Alias.
-3. **Wochenbericht kalibrieren.** Nach den ersten echten Berichten Persona und
-   Prompts nachschärfen.
-4. **V2 Handy:** PWA, Tailscale-Anleitung, Offline-Puffer.
-5. **V2 Audio:** Aufnahme, Transkription lokal (Whisper) oder per API.
-6. Ideen aus dem Vorgängerprojekt sichten (Pennebaker-Notizen, Wochen-Zielreview).
+Offene Aufgaben stehen in [docs/TASKS.md](docs/TASKS.md), Entscheidungen seit
+dem Interview in [docs/DECISIONS.md](docs/DECISIONS.md).
