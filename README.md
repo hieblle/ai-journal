@@ -74,9 +74,9 @@ Der Server prüft stündlich und beim Start, was fällig ist. War der Mac aus, w
 
 Der Charakter der KI steht in `ai/persona.md` (Radical Honesty nach Brad Blanton). Nach den ersten Wochenberichten lohnt es sich, ihn nachzuschärfen.
 
-## Automatisch beim Login starten
+## Optional: Server dauerhaft im Hintergrund (ohne Programm)
 
-Alternative zum Programm-Icon, wenn der Server immer laufen soll (dann erzeugt der Zeitplan Berichte auch ohne dein Zutun). Beides zusammen ist nicht sinnvoll: Beenden des Programms stoppt auch den LaunchAgent-Server, den launchd dann sofort neu startet.
+Normalerweise nicht nötig. Das Programm oben reicht: läuft es, erzeugt der Zeitplan Berichte im Hintergrund; ist es beendet, holt der Server beim nächsten Start nach. Nur wenn der Server auch ohne dein Zutun immer laufen soll, geht das über einen LaunchAgent. Dann das Programm nicht mehr zum Beenden verwenden, launchd würde den Server sofort neu starten.
 
 Lege `~/Library/LaunchAgents/de.ai-journal.plist` an (Pfade anpassen):
 
