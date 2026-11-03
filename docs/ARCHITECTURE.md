@@ -115,10 +115,23 @@ Styling in `app.css` über CSS-Variablen, hell und dunkel per `prefers-color-sch
   session-secret    HMAC-Schlüssel für Session-Cookies
   state.json        Scheduler-Zustand
   cli-cwd/          leeres Arbeitsverzeichnis für die Claude CLI
+  server.log        Ausgabe des Hintergrundservers (launch.sh), ab 1 MB nach server.log.alt verschoben
+  server.pid        PID des Hintergrundservers
 ```
 
 Überschreibbar mit `AI_JOURNAL_HOME`. Journal-Ordner beim ersten Start aus `AI_JOURNAL_DIR`, danach aus der Config.
 
 ## Build und Start
 
-`start.sh` installiert bei Bedarf Abhängigkeiten, baut neu, wenn sich der Git-Stand seit dem letzten Build geändert hat (Stempel in `server/dist/.build-stamp`), und startet `node server/dist/index.js`. Im Dev-Modus (`npm run dev`) liefert Vite das Frontend und leitet `/api` an den Server weiter.
+`start.sh` installiert bei Bedarf Abhängigkeiten, baut neu, wenn sich der Git-Stand seit dem letzten Build geändert hat (Stempel in `server/dist/.build-stamp`), und startet `node server/dist/index.js` im Vordergrund. Im Dev-Modus (`npm run dev`) liefert Vite das Frontend und leitet `/api` an den Server weiter.
+
+### Skripte (`scripts/`)
+
+| Datei | Zweck |
+|---|---|
+| `launch.sh` | Hintergrundstart: erweitert `PATH` um `~/.local/bin`, Homebrew, nvm/volta (Programme per Doppelklick haben sonst kein `node`/`claude`), liest Port und Host aus Umgebung oder `config.json`, prüft über `GET /api/auth/status`, ob der Server schon läuft, startet sonst `start.sh` per `nohup` (Log `~/.ai-journal/server.log`, PID `~/.ai-journal/server.pid`), wartet bis zu 3 Minuten und öffnet dann den Browser. Fehler als macOS-Mitteilung über `osascript`. |
+| `stop.sh` | Beendet den Server über die PID-Datei, sonst über `lsof` auf dem Port. |
+| `make-app.sh` | Baut `~/Applications/AI Journal.app`: minimales Bundle mit `Info.plist` (`LSUIElement`, kein Dock-Symbol während des Laufs), Startskript `Contents/MacOS/run`, das `scripts/launch.sh` aus dem Repo aufruft, und `icon.icns` aus `assets/icon-1024.png` (per `sips` + `iconutil`). Mit `--stop` zusätzlich „AI Journal beenden.app“. |
+| `e2e.mjs` | Browser-Test mit Playwright gegen einen laufenden Server mit Fake-Anbieter. |
+
+`assets/icon-1024.png` ist aus `web/public/icon.svg` gerendert (832 px Icon auf 1024 px, transparenter Rand, Schatten), wie macOS es für App-Icons erwartet.

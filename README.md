@@ -18,6 +18,25 @@ Beim ersten Start werden Abhängigkeiten installiert und die Oberfläche gebaut.
 
 Der Journal-Ordner ist standardmäßig `~/Journal`. In den Einstellungen kannst du ihn ändern, zum Beispiel auf einen Ordner in OneDrive. Alles darin ist reines Markdown und lässt sich jederzeit mit Obsidian als Vault öffnen.
 
+## Als Programm am Mac (Doppelklick)
+
+Einmalig:
+
+```bash
+cd ~/PROJECTS/ai-journal
+npm run mac-app
+```
+
+Das legt `~/Applications/AI Journal.app` an. Doppelklick (oder Spotlight: „AI Journal“) startet den Server im Hintergrund, wartet, bis er antwortet, und öffnet die App im Browser. Läuft der Server schon, wird nur der Browser geöffnet. Das Programm kannst du aus `~/Applications` ins Dock ziehen. Beim ersten Start nach einem `git pull` dauert es ein bis zwei Minuten, weil neu gebaut wird; Fehler kommen als Mitteilung.
+
+Der Server läuft weiter, bis du ihn beendest oder dich abmeldest:
+
+```bash
+./scripts/stop.sh
+```
+
+Wer dafür auch ein Icon will: `npm run mac-app -- --stop` legt zusätzlich „AI Journal beenden.app“ an. Protokoll des Hintergrundservers: `~/.ai-journal/server.log`. Nach einem `npm run mac-app` muss das Programm nicht neu erzeugt werden, wenn sich der Code ändert; es ruft immer `scripts/launch.sh` aus dem Repo auf.
+
 ## Ordnerstruktur
 
 ```
@@ -58,6 +77,8 @@ Der Server prüft stündlich und beim Start, was fällig ist. War der Mac aus, w
 Der Charakter der KI steht in `ai/persona.md` (Radical Honesty nach Brad Blanton). Nach den ersten Wochenberichten lohnt es sich, ihn nachzuschärfen.
 
 ## Automatisch beim Login starten
+
+Alternative zum Programm-Icon, wenn der Server immer laufen soll (dann erzeugt der Zeitplan Berichte auch ohne dein Zutun). Beides zusammen geht auch: das Icon öffnet dann nur den Browser.
 
 Lege `~/Library/LaunchAgents/de.ai-journal.plist` an (Pfade anpassen):
 

@@ -4,6 +4,7 @@ Neueste oben. Aus Nutzersicht, nicht aus Code-Sicht.
 
 ## 2026-11-03
 
+- Mac-Programm: `npm run mac-app` legt `~/Applications/AI Journal.app` an. Doppelklick startet den Server im Hintergrund und öffnet die App im Browser; läuft er schon, nur den Browser. `./scripts/stop.sh` beendet ihn, `npm run mac-app -- --stop` erzeugt dafür ein zweites Programm. Protokoll in `~/.ai-journal/server.log`.
 - Dokumentation: `CLAUDE.md` mit Arbeitsregeln, `docs/` mit Architektur, Entscheidungslog, Aufgaben und diesem Protokoll. Backlog aus `DESIGN.md` nach `docs/TASKS.md` verschoben.
 - Einstellungen → KI: neues Feld "Langlebiges Token" für die Claude CLI (aus `claude setup-token`). Damit hängt die App nicht am Keychain-Login der Terminalsitzung.
 - Claude CLI: Aufruf ohne `--bare`, damit der normale Login genutzt wird. Die CLI läuft in einem leeren Ordner unter `~/.ai-journal/cli-cwd`.

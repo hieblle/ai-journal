@@ -2,6 +2,14 @@
 
 Neueste oben. Jede Entscheidung: Kontext, Entscheidung, Folgen. Die Grundentscheidungen aus dem Design-Interview stehen in `../DESIGN.md`.
 
+## 2026-11-03 · Mac-Programm als Shell-Bundle statt Automator oder Electron
+
+**Kontext.** Der Nutzer will ein Icon, das Server und Browser startet. Optionen: Automator/Kurzbefehle-App, `.command`-Datei (öffnet ein Terminalfenster, das offen bleibt), Electron (schwer, eigener Build), oder ein handgebautes `.app`-Bundle mit Shell-Skript.
+
+**Entscheidung.** `scripts/make-app.sh` erzeugt ein minimales Bundle (`Info.plist` + Skript + `icon.icns`), das `scripts/launch.sh` aus dem Repo aufruft. Das Bundle enthält keinen Code, nur den Pfad zum Repo; Codeänderungen brauchen kein neues Bundle. `LSUIElement` verhindert ein Dock-Symbol, da das Programm nach dem Start sofort beendet ist. Der Server läuft per `nohup` weiter.
+
+**Folgen.** Unsigniert, aber lokal erzeugt, daher ohne Gatekeeper-Warnung. Beenden nur über `scripts/stop.sh` oder das optionale zweite Programm. Wird das Repo verschoben, muss `npm run mac-app` erneut laufen. Programme per Doppelklick haben einen minimalen `PATH`; `launch.sh` ergänzt die üblichen Orte für `node` und `claude`.
+
 ## 2026-11-03 · Langlebiges CLI-Token als Prototyp-Lösung, Keychain als Ziel
 
 **Kontext.** `claude -p` meldete auf dem Mac "OAuth session expired and could not be refreshed", obwohl `claude` interaktiv läuft. Ursache noch nicht geklärt (Vermutung: zweite Installation oder Alias). `claude setup-token` ist der offizielle Weg für nicht-interaktive Nutzung mit Abo.
