@@ -2,13 +2,13 @@
 
 Neueste oben. Jede Entscheidung: Kontext, Entscheidung, Folgen. Die Grundentscheidungen aus dem Design-Interview stehen in `../DESIGN.md`.
 
-## 2026-11-03 · Mac-Programm als Shell-Bundle statt Automator oder Electron
+## 2026-11-03 · Mac-Programm als AppleScript-Applet, das offen bleibt
 
-**Kontext.** Der Nutzer will ein Icon, das Server und Browser startet. Optionen: Automator/Kurzbefehle-App, `.command`-Datei (öffnet ein Terminalfenster, das offen bleibt), Electron (schwer, eigener Build), oder ein handgebautes `.app`-Bundle mit Shell-Skript.
+**Kontext.** Der Nutzer will ein Icon, das Server und Browser startet, und den Server ohne Terminal wieder beenden können. Erster Versuch war ein Shell-Bundle, das nach dem Start sofort endet; Beenden ging dann nur per Skript. Abgelehnt. Optionen: Automator/Kurzbefehle (gleiches Problem), Menüleisten-App in Swift (eigener Build, Signierung), Electron (schwer), AppleScript-Applet mit "stay open" (`osacompile -s`, in macOS enthalten).
 
-**Entscheidung.** `scripts/make-app.sh` erzeugt ein minimales Bundle (`Info.plist` + Skript + `icon.icns`), das `scripts/launch.sh` aus dem Repo aufruft. Das Bundle enthält keinen Code, nur den Pfad zum Repo; Codeänderungen brauchen kein neues Bundle. `LSUIElement` verhindert ein Dock-Symbol, da das Programm nach dem Start sofort beendet ist. Der Server läuft per `nohup` weiter.
+**Entscheidung.** `scripts/AI-Journal.applescript`, übersetzt von `scripts/make-app.sh`. Das Applet bleibt offen und damit im Dock, solange der Server läuft: `on run` startet über `launch.sh`, `on reopen` öffnet den Browser erneut, `on idle` prüft alle 30 s über `status.sh`, ob der Server noch lebt, und beendet sich sonst, `on quit` stoppt den Server über `stop.sh`. Der Server selbst läuft per `nohup` getrennt vom Applet, daher überlebt er ein Abstürzen des Applets, nicht aber ⌘Q.
 
-**Folgen.** Unsigniert, aber lokal erzeugt, daher ohne Gatekeeper-Warnung. Beenden nur über `scripts/stop.sh` oder das optionale zweite Programm. Wird das Repo verschoben, muss `npm run mac-app` erneut laufen. Programme per Doppelklick haben einen minimalen `PATH`; `launch.sh` ergänzt die üblichen Orte für `node` und `claude`.
+**Folgen.** Dock-Symbol = Server läuft, ⌘Q = Server aus. Das ist das Verhalten, das man von einem Mac-Programm erwartet. Unsigniert, lokal erzeugt, daher ohne Gatekeeper-Warnung. Zusammen mit dem LaunchAgent nicht sinnvoll (⌘Q würde dessen Server beenden, launchd startet ihn neu). Das Applet enthält nur den Repo-Pfad; Umzug des Repos erfordert `npm run mac-app` erneut. Nicht im Container testbar (`osacompile`, `sips`, `iconutil` nur auf macOS), Shell-Teile (`launch.sh`, `stop.sh`, `status.sh`) sind getestet.
 
 ## 2026-11-03 · Langlebiges CLI-Token als Prototyp-Lösung, Keychain als Ziel
 

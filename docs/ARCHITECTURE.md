@@ -131,7 +131,9 @@ Styling in `app.css` über CSS-Variablen, hell und dunkel per `prefers-color-sch
 |---|---|
 | `launch.sh` | Hintergrundstart: erweitert `PATH` um `~/.local/bin`, Homebrew, nvm/volta (Programme per Doppelklick haben sonst kein `node`/`claude`), liest Port und Host aus Umgebung oder `config.json`, prüft über `GET /api/auth/status`, ob der Server schon läuft, startet sonst `start.sh` per `nohup` (Log `~/.ai-journal/server.log`, PID `~/.ai-journal/server.pid`), wartet bis zu 3 Minuten und öffnet dann den Browser. Fehler als macOS-Mitteilung über `osascript`. |
 | `stop.sh` | Beendet den Server über die PID-Datei, sonst über `lsof` auf dem Port. |
-| `make-app.sh` | Baut `~/Applications/AI Journal.app`: minimales Bundle mit `Info.plist` (`LSUIElement`, kein Dock-Symbol während des Laufs), Startskript `Contents/MacOS/run`, das `scripts/launch.sh` aus dem Repo aufruft, und `icon.icns` aus `assets/icon-1024.png` (per `sips` + `iconutil`). Mit `--stop` zusätzlich „AI Journal beenden.app“. |
+| `status.sh` | Exit 0, wenn der Server läuft (PID lebt oder Port antwortet). Für den Idle-Handler des Mac-Programms. |
+| `AI-Journal.applescript` | Quelle des Mac-Programms. `on run`/`on reopen` rufen `launch.sh`, `on idle` (alle 30 s, nach 4 min Schonfrist) prüft `status.sh` und beendet das Programm, wenn der Server weg ist, `on quit` ruft `stop.sh`. `__ROOT__` wird beim Bauen durch den Repo-Pfad ersetzt. |
+| `make-app.sh` | Baut `~/Applications/AI Journal.app` mit `osacompile -s` (stay open, Symbol bleibt im Dock), ersetzt `applet.icns` durch das Icon aus `assets/icon-1024.png` (`sips` + `iconutil`) und setzt Name und Bundle-ID per `plutil`. |
 | `e2e.mjs` | Browser-Test mit Playwright gegen einen laufenden Server mit Fake-Anbieter. |
 
 `assets/icon-1024.png` ist aus `web/public/icon.svg` gerendert (832 px Icon auf 1024 px, transparenter Rand, Schatten), wie macOS es für App-Icons erwartet.

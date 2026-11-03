@@ -28,7 +28,7 @@ Stand: 2026-11-03. Zu Beginn jeder Sitzung lesen, am Ende aktualisieren. Priorit
 
 - [ ] Berichte-Übersicht: Karte "Aktuelle Zeiträume" ist noch etwas voll, Layout prüfen.
 - [ ] Frontend-Bundle ist 660 kB; CodeMirror und marked per dynamischem Import laden.
-- [ ] „Server beenden“ als Knopf in den Einstellungen, damit `stop.sh` nicht nötig ist.
+- [ ] Mac-Programm auf dem Mac prüfen: Icon, Dock-Verhalten, ⌘Q, Verschwinden nach Serverabsturz. Bei Bedarf „Server beenden“ zusätzlich als Knopf in den Einstellungen (nützlich später am Handy).
 - [ ] Suche: Treffer in Frontmatter-Feldern (z.B. `energy: 2`) bewusst ausgeschlossen, evtl. Filter nach Energie/Fokus ergänzen.
 
 ## In Arbeit
@@ -45,5 +45,5 @@ Stand: 2026-11-03. Zu Beginn jeder Sitzung lesen, am Ende aktualisieren. Priorit
 - [x] 2026-11-03 · CLI-Fix: `--bare` entfernt, leeres Arbeitsverzeichnis
 - [x] 2026-11-03 · `start.sh` baut bei Codeänderung automatisch neu
 - [x] 2026-11-03 · Langlebiges CLI-Token als Einstellung; App läuft lokal auf dem Mac
-- [x] 2026-11-03 · Mac-Programm: `npm run mac-app` erzeugt „AI Journal.app“ (Server im Hintergrund + Browser), `scripts/stop.sh`
+- [x] 2026-11-03 · Mac-Programm: `npm run mac-app` erzeugt „AI Journal.app“ (im Dock solange der Server läuft, ⌘Q beendet ihn)
 - [x] 2026-11-03 · Dokumentationsstruktur: `CLAUDE.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/TASKS.md`, `docs/CHANGELOG.md`

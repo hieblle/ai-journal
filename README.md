@@ -27,15 +27,13 @@ cd ~/PROJECTS/ai-journal
 npm run mac-app
 ```
 
-Das legt `~/Applications/AI Journal.app` an. Doppelklick (oder Spotlight: „AI Journal“) startet den Server im Hintergrund, wartet, bis er antwortet, und öffnet die App im Browser. Läuft der Server schon, wird nur der Browser geöffnet. Das Programm kannst du aus `~/Applications` ins Dock ziehen. Beim ersten Start nach einem `git pull` dauert es ein bis zwei Minuten, weil neu gebaut wird; Fehler kommen als Mitteilung.
+Das legt `~/Applications/AI Journal.app` an. Öffnen per Spotlight („AI Journal“) oder aus `~/Applications`, von dort ins Dock ziehen.
 
-Der Server läuft weiter, bis du ihn beendest oder dich abmeldest:
+- **Doppelklick** startet den Server im Hintergrund, wartet, bis er antwortet, und öffnet die App im Browser. Nach einem `git pull` dauert das ein bis zwei Minuten, weil neu gebaut wird; Fehler kommen als Mitteilung.
+- **Solange das Symbol im Dock ist, läuft der Server.** Klick aufs Symbol öffnet den Browser erneut.
+- **Beenden (⌘Q oder Rechtsklick im Dock → Beenden) stoppt den Server.** Stirbt der Server von selbst, verschwindet das Symbol nach kurzer Zeit.
 
-```bash
-./scripts/stop.sh
-```
-
-Wer dafür auch ein Icon will: `npm run mac-app -- --stop` legt zusätzlich „AI Journal beenden.app“ an. Protokoll des Hintergrundservers: `~/.ai-journal/server.log`. Nach einem `npm run mac-app` muss das Programm nicht neu erzeugt werden, wenn sich der Code ändert; es ruft immer `scripts/launch.sh` aus dem Repo auf.
+Protokoll des Hintergrundservers: `~/.ai-journal/server.log`. Das Programm enthält nur den Pfad zum Repo; nach Codeänderungen muss es nicht neu erzeugt werden, nach einem Umzug des Ordners schon. Ohne Programm geht es auch im Terminal: `./scripts/launch.sh` startet, `./scripts/stop.sh` beendet.
 
 ## Ordnerstruktur
 
@@ -78,7 +76,7 @@ Der Charakter der KI steht in `ai/persona.md` (Radical Honesty nach Brad Blanton
 
 ## Automatisch beim Login starten
 
-Alternative zum Programm-Icon, wenn der Server immer laufen soll (dann erzeugt der Zeitplan Berichte auch ohne dein Zutun). Beides zusammen geht auch: das Icon öffnet dann nur den Browser.
+Alternative zum Programm-Icon, wenn der Server immer laufen soll (dann erzeugt der Zeitplan Berichte auch ohne dein Zutun). Beides zusammen ist nicht sinnvoll: Beenden des Programms stoppt auch den LaunchAgent-Server, den launchd dann sofort neu startet.
 
 Lege `~/Library/LaunchAgents/de.ai-journal.plist` an (Pfade anpassen):
 
