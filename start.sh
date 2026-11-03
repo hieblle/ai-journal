@@ -13,9 +13,17 @@ if [ ! -d node_modules ]; then
   npm install --no-audit --no-fund
 fi
 
-if [ ! -f web/dist/index.html ] || [ ! -f server/dist/index.js ] || [ "${REBUILD:-0}" = "1" ]; then
+# Neu bauen, wenn kein Build da ist, der Code sich seit dem letzten Build geändert hat, oder REBUILD=1 gesetzt ist.
+STAMP=server/dist/.build-stamp
+CURRENT=$( { git rev-parse HEAD 2>/dev/null; git status --porcelain 2>/dev/null | head -c 2000; } | shasum | cut -c1-16 )
+if [ ! -f web/dist/index.html ] || [ ! -f server/dist/index.js ] || [ "${REBUILD:-0}" = "1" ] || [ "$(cat "$STAMP" 2>/dev/null)" != "$CURRENT" ]; then
+  if [ -f package-lock.json ] && [ node_modules/.package-lock.json -ot package-lock.json ]; then
+    echo "Aktualisiere Abhängigkeiten …"
+    npm install --no-audit --no-fund
+  fi
   echo "Baue Oberfläche und Server …"
   npm run build
+  echo "$CURRENT" > "$STAMP"
 fi
 
 PORT="${AI_JOURNAL_PORT:-8787}"

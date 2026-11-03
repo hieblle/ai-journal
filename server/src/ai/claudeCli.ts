@@ -1,9 +1,15 @@
 import { spawn } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { HOME_DIR } from "../config.js";
 import type { AiProvider, GenerateRequest } from "./provider.js";
 
 /**
  * Runs the Claude Code CLI in headless mode. Uses the user's existing login
- * (Pro/Max subscription), no API key. Tools are disabled, nothing is persisted.
+ * (Pro/Max subscription, read from the keychain), no API key. Tools are
+ * disabled, nothing is persisted. Do not add --bare: it disables OAuth and
+ * keychain reads. Instead the CLI runs in an empty working directory so it
+ * picks up no CLAUDE.md, hooks or project settings.
  */
 export class ClaudeCliProvider implements AiProvider {
   readonly kind = "claude-cli" as const;
@@ -12,7 +18,7 @@ export class ClaudeCliProvider implements AiProvider {
   constructor(private opts: { command: string; model: string }) {}
 
   async generate(req: GenerateRequest): Promise<string> {
-    const args = ["-p", "--bare", "--no-session-persistence", "--tools", "", "--output-format", "text", "--system-prompt", req.system];
+    const args = ["-p", "--no-session-persistence", "--tools", "", "--output-format", "text", "--system-prompt", req.system];
     if (this.opts.model) args.push("--model", this.opts.model);
     const out = await run(this.opts.command || "claude", args, req.prompt, 15 * 60 * 1000);
     const text = out.trim();
@@ -27,12 +33,19 @@ export class ClaudeCliProvider implements AiProvider {
   }
 }
 
+/** Empty directory the CLI runs in, so it never sees the app's own repo. */
+function cliCwd(): string {
+  const dir = path.join(HOME_DIR, "cli-cwd");
+  fs.mkdirSync(dir, { recursive: true });
+  return dir;
+}
+
 function run(cmd: string, args: string[], stdin: string, timeoutMs: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const env = { ...process.env };
     // Never let the headless call inherit a nested-session marker.
     delete env.CLAUDECODE;
-    const child = spawn(cmd, args, { stdio: ["pipe", "pipe", "pipe"], env });
+    const child = spawn(cmd, args, { stdio: ["pipe", "pipe", "pipe"], env, cwd: cliCwd() });
     let stdout = "";
     let stderr = "";
     const timer = setTimeout(() => {

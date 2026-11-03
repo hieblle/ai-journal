@@ -91,7 +91,7 @@ launchctl load ~/Library/LaunchAgents/de.ai-journal.plist
 | `AI_JOURNAL_HOST` | `127.0.0.1` | Bind-Adresse. Für Zugriff vom Handy über Tailscale auf `0.0.0.0` oder die Tailscale-IP setzen. |
 | `AI_JOURNAL_DIR` | `~/Journal` | Journal-Ordner beim allerersten Start (danach aus der Konfiguration) |
 | `AI_JOURNAL_HOME` | `~/.ai-journal` | Ordner für Konfiguration und Zustand |
-| `REBUILD=1` | | erzwingt einen neuen Build in `start.sh` |
+| `REBUILD=1` | | erzwingt einen neuen Build in `start.sh` (sonst wird automatisch gebaut, wenn der Code sich geändert hat) |
 
 ## Entwicklung
 
