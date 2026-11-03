@@ -15,19 +15,19 @@ export class ClaudeCliProvider implements AiProvider {
   readonly kind = "claude-cli" as const;
   readonly label = "Claude Code CLI";
 
-  constructor(private opts: { command: string; model: string }) {}
+  constructor(private opts: { command: string; model: string; oauthToken?: string }) {}
 
   async generate(req: GenerateRequest): Promise<string> {
     const args = ["-p", "--no-session-persistence", "--tools", "", "--output-format", "text", "--system-prompt", req.system];
     if (this.opts.model) args.push("--model", this.opts.model);
-    const out = await run(this.opts.command || "claude", args, req.prompt, 15 * 60 * 1000);
+    const out = await run(this.opts.command || "claude", args, req.prompt, 15 * 60 * 1000, this.opts.oauthToken);
     const text = out.trim();
     if (!text) throw new Error("Claude CLI hat eine leere Antwort geliefert.");
     return text;
   }
 
   async test(): Promise<string> {
-    const version = await run(this.opts.command || "claude", ["--version"], "", 20_000);
+    const version = await run(this.opts.command || "claude", ["--version"], "", 20_000, this.opts.oauthToken);
     const reply = await this.generate({ system: "Antworte mit genau einem Wort.", prompt: "Sag OK." });
     return `${version.trim()} · Antwort: ${reply.slice(0, 40)}`;
   }
@@ -40,11 +40,13 @@ function cliCwd(): string {
   return dir;
 }
 
-function run(cmd: string, args: string[], stdin: string, timeoutMs: number): Promise<string> {
+function run(cmd: string, args: string[], stdin: string, timeoutMs: number, oauthToken?: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const env = { ...process.env };
     // Never let the headless call inherit a nested-session marker.
     delete env.CLAUDECODE;
+    // A long-lived token from `claude setup-token` takes precedence over the keychain login.
+    if (oauthToken) env.CLAUDE_CODE_OAUTH_TOKEN = oauthToken.trim();
     const child = spawn(cmd, args, { stdio: ["pipe", "pipe", "pipe"], env, cwd: cliCwd() });
     let stdout = "";
     let stderr = "";

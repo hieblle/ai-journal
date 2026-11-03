@@ -73,7 +73,7 @@ export interface Settings {
   defaultTemplate: string;
   provider: "claude-cli" | "claude-api" | "ollama";
   providers: {
-    "claude-cli": { command: string; model: string };
+    "claude-cli": { command: string; model: string; oauthToken: string };
     "claude-api": { apiKey: string; model: string };
     ollama: { baseUrl: string; model: string };
   };

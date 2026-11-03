@@ -193,6 +193,11 @@
           <span>Modell (optional)</span>
           <input type="text" bind:value={s.providers["claude-cli"].model} placeholder="leer = Standard der CLI, z.B. opus oder sonnet" />
         </label>
+        <label>
+          <span>Langlebiges Token (optional, empfohlen)</span>
+          <input type="password" bind:value={s.providers["claude-cli"].oauthToken} placeholder="sk-ant-oat…" autocomplete="off" />
+          <small class="faint">Im Terminal mit <code>claude setup-token</code> erzeugen und hier einfügen. Dann hängt die App nicht am Keychain-Login der interaktiven Sitzung. Leer lassen, um den normalen Login zu nutzen.</small>
+        </label>
       {:else if s.provider === "claude-api"}
         <label>
           <span>API-Key</span>

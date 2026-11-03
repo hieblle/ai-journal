@@ -225,10 +225,14 @@ export function registerRoutes(app: FastifyInstance, ctx: AppContext): void {
 
   app.put<{ Body: Partial<AppConfig> }>("/api/settings", async (req) => {
     const patch = { ...(req.body ?? {}) } as Partial<AppConfig> & { providers?: AppConfig["providers"] };
-    // Masked key from the UI means "unchanged".
+    // Masked secrets from the UI mean "unchanged".
     const key = patch.providers?.["claude-api"]?.apiKey;
-    if (typeof key === "string" && (key.startsWith("••••") || key === "")) {
-      patch.providers!["claude-api"] = { ...patch.providers!["claude-api"], apiKey: key === "" ? "" : ctx.cfg.providers["claude-api"].apiKey };
+    if (typeof key === "string" && key.startsWith("••••")) {
+      patch.providers!["claude-api"] = { ...patch.providers!["claude-api"], apiKey: ctx.cfg.providers["claude-api"].apiKey };
+    }
+    const tok = patch.providers?.["claude-cli"]?.oauthToken;
+    if (typeof tok === "string" && tok.startsWith("••••")) {
+      patch.providers!["claude-cli"] = { ...patch.providers!["claude-cli"], oauthToken: ctx.cfg.providers["claude-cli"].oauthToken };
     }
     if (patch.journalDir !== undefined) {
       if (typeof patch.journalDir !== "string" || !patch.journalDir.trim()) bad("Journal-Ordner fehlt.");

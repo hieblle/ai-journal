@@ -21,7 +21,7 @@ export interface AppConfig {
   defaultTemplate: string;
   provider: ProviderKind;
   providers: {
-    "claude-cli": { command: string; model: string };
+    "claude-cli": { command: string; model: string; oauthToken: string };
     "claude-api": { apiKey: string; model: string };
     ollama: { baseUrl: string; model: string };
   };
@@ -44,7 +44,7 @@ export function defaultConfig(): AppConfig {
     defaultTemplate: "standard",
     provider: "claude-cli",
     providers: {
-      "claude-cli": { command: "claude", model: "" },
+      "claude-cli": { command: "claude", model: "", oauthToken: "" },
       "claude-api": { apiKey: "", model: "claude-opus-5-5" },
       ollama: { baseUrl: "http://127.0.0.1:11434", model: "llama3.1" },
     },
@@ -106,6 +106,10 @@ export function publicConfig(cfg: AppConfig) {
     pinSet: Boolean(cfg.pinHash),
     providers: {
       ...cfg.providers,
+      "claude-cli": {
+        ...cfg.providers["claude-cli"],
+        oauthToken: cfg.providers["claude-cli"].oauthToken ? "••••" + cfg.providers["claude-cli"].oauthToken.slice(-4) : "",
+      },
       "claude-api": {
         ...cfg.providers["claude-api"],
         apiKey: cfg.providers["claude-api"].apiKey ? "••••" + cfg.providers["claude-api"].apiKey.slice(-4) : "",
